@@ -15,45 +15,6 @@ from pathlib import Path
 load_dotenv()
 
 # =====================================================
-# AUTO-EXTRACT IMAGES FROM ZIP
-# =====================================================
-def setup_images():
-    """Tự động giải nén images.zip nếu thư mục public/images chưa tồn tại"""
-    images_dir = Path("./public/images")
-    zip_file = Path("./images.zip")
-    
-    # Kiểm tra xem thư mục images đã tồn tại chưa
-    if not images_dir.exists():
-        print("📁 Thư mục public/images chưa tồn tại...")
-        
-        # Kiểm tra xem có file images.zip không
-        if zip_file.exists():
-            print(f"📦 Tìm thấy {zip_file}, đang giải nén...")
-            
-            try:
-                # Tạo thư mục public nếu chưa có
-                images_dir.parent.mkdir(parents=True, exist_ok=True)
-                
-                # Giải nén
-                with zipfile.ZipFile(zip_file, 'r') as zip_ref:
-                    zip_ref.extractall("./public/images")
-                
-                print(f"✅ Đã giải nén {len(os.listdir(images_dir))} files vào {images_dir}")
-                
-            except Exception as e:
-                print(f"❌ Lỗi khi giải nén images.zip: {e}")
-                traceback.print_exc()
-        else:
-            print(f"⚠️ Không tìm thấy {zip_file}")
-            print("   Tạo thư mục trống public/images...")
-            images_dir.mkdir(parents=True, exist_ok=True)
-    else:
-        print(f"✅ Thư mục {images_dir} đã tồn tại với {len(os.listdir(images_dir))} files")
-
-# Chạy setup images trước khi khởi tạo components
-setup_images()
-
-# =====================================================
 # THREAD POOL FOR BLOCKING OPERATIONS
 # =====================================================
 executor = ThreadPoolExecutor(max_workers=4)
@@ -212,9 +173,9 @@ async def start():
         await cl.Message(
             content="👨‍🍳 **Xin chào! Mình là ChefMate - Trợ lý nấu ăn thông minh.**\n\n"
                    "Bạn có thể:\n"
-                   "Tìm công thức món ăn (vd: \"pizza recipe\")\n"
-                   "Hỏi cách nấu ăn (vd: \"cách luộc trứng\")\n"
-                   "Tìm món từ nguyên liệu (vd: \"tôi có gà và tỏi, nấu gì?\")\n\n"
+                   "🔍 Tìm công thức món ăn (vd: \"pizza recipe\")\n"
+                   "🔪 Hỏi cách nấu ăn (vd: \"cách luộc trứng\")\n"
+                   "🍎 Tìm món từ nguyên liệu (vd: \"tôi có gà và tỏi, nấu gì?\")\n\n"
                    "Hỏi bằng tiếng Việt hoặc tiếng Anh đều được nhé! 😊"
         ).send()
     
@@ -310,7 +271,7 @@ Answer in {"VIETNAMESE" if detected_lang == "vi" else "ENGLISH"}:"""
                 return
         
         # Show thinking indicator
-        msg = cl.Message(content="🤔 Đang suy nghĩ...")
+        msg = cl.Message(content="🤔 ChefMate đang suy nghĩ... / ChefMate is thinking...")
         await msg.send()
         
         # =====================================================
@@ -562,20 +523,20 @@ Answer in {"VIETNAMESE" if detected_lang == "vi" else "ENGLISH"}:"""
                 response = """Xin lỗi, tôi chỉ chuyên về nấu ăn thôi! 🍳
 
 Tôi có thể giúp bạn:
-Tìm công thức món ăn
-Hướng dẫn nấu ăn
-Tư vấn nguyên liệu
-Mẹo vặt bếp núc
+🔍 Tìm công thức món ăn
+🔪 Hướng dẫn nấu ăn
+🍎 Tư vấn nguyên liệu
+💡 Mẹo vặt bếp núc
 
 Bạn muốn hỏi gì về nấu ăn không? 😊"""
             else:
                 response = """Sorry, I only specialize in cooking! 🍳
 
 I can help you with:
-Recipe recommendations
-Cooking instructions
-Ingredient advice
-Cooking tips
+🔍 Recipe recommendations
+🔪 Cooking instructions
+🍎 Ingredient advice
+💡 Cooking tips
 
 Would you like to ask about cooking? 😊"""
             
